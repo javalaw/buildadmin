@@ -51,7 +51,7 @@ class AllowCrossDomain
             $corsDomain[] = $request->host(true);
 
             if (in_array("*", $corsDomain) || in_array($origin, $corsDomain) || (isset($info['host']) && in_array($info['host'], $corsDomain))) {
-                header("Access-Control-Allow-Origin: " . $origin);
+                $header["Access-Control-Allow-Origin"] = $origin;
             }
         }
 

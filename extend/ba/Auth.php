@@ -32,6 +32,18 @@ class Auth
     protected array $children = [];
 
     /**
+     * ruleList
+     * @var array
+     */
+    protected array $ruleList = [];
+
+    /**
+     * groups
+     * @var array
+     */
+    protected array $groups = [];
+
+    /**
      * 构造方法
      * @param array $config
      */
@@ -156,15 +168,14 @@ class Auth
     public function getRuleList(int $uid): array
     {
         // 静态保存所有用户验证通过的权限列表
-        static $ruleList = [];
-        if (isset($ruleList[$uid])) {
-            return $ruleList[$uid];
+        if (isset($this->ruleList[$uid])) {
+            return $this->ruleList[$uid];
         }
 
         // 读取用户规则节点
         $ids = $this->getRuleIds($uid);
         if (empty($ids)) {
-            $ruleList[$uid] = [];
+            $this->ruleList[$uid] = [];
             return [];
         }
 
@@ -192,7 +203,7 @@ class Auth
                 $this->rules[$key]['keepalive'] = $rule['name'];
             }
         }
-        $ruleList[$uid] = $rules;
+        $this->ruleList[$uid] = $rules;
         return array_unique($rules);
     }
 
@@ -221,9 +232,9 @@ class Auth
      */
     public function getGroups(int $uid): array
     {
-        static $groups = [];
-        if (isset($groups[$uid])) {
-            return $groups[$uid];
+        // static $groups = [];
+        if (isset($this->groups[$uid])) {
+            return $this->groups[$uid];
         }
 
         if ($this->config['auth_group_access']) {
@@ -244,7 +255,7 @@ class Auth
                 ->toArray();
         }
 
-        $groups[$uid] = $userGroups ?: [];
-        return $groups[$uid];
+        $this->groups[$uid] = $userGroups ?: [];
+        return $this->groups[$uid];
     }
 }
