@@ -5,9 +5,12 @@ declare(strict_types=1);
 namespace app\middleware;
 
 use app\admin\library\Auth;
+use app\admin\library\module\Manage;
 use app\common\library\Auth as LibraryAuth;
 use app\ServerSideEvent;
+use ba\TableManager;
 use ba\Terminal;
+use ba\Tree;
 use think\App;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Response;
@@ -52,5 +55,8 @@ class LongLifeApp
         app()->delete(Auth::class);
         app()->delete(LibraryAuth::class);
         app()->delete(Terminal::class);
+        app()->delete(Manage::class);
+        app()->delete(Tree::class);
+        TableManager::clearInstance();
     }
 }

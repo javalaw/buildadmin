@@ -33,11 +33,7 @@ class Tree
      */
     public static function instance(): Tree
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new static();
-        }
-
-        return self::$instance;
+        return app(static::class);
     }
 
     /**

@@ -114,12 +114,7 @@ class Auth extends \ba\Auth
      */
     public static function instance(array $options = []): Auth
     {
-        return app(static::class, $options);
-        // if (is_null(self::$instance)) {
-        //     self::$instance = new static($options);
-        // }
-
-        // return self::$instance;
+        return app(static::class, [$options]);
     }
 
     /**

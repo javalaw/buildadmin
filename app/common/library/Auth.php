@@ -122,7 +122,7 @@ class Auth extends \ba\Auth
      */
     public static function instance(array $options = []): Auth
     {
-        return app(static::class, $options);
+        return app(static::class, [$options]);
     }
 
     /**

@@ -58,10 +58,7 @@ class Manage
      */
     public static function instance(string $uid = ''): Manage
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new static($uid);
-        }
-        return self::$instance;
+        return app(static::class, [$uid]);
     }
 
     public function __construct(string $uid)

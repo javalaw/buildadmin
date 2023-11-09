@@ -47,6 +47,17 @@ class TableManager
     }
 
     /**
+     * 清理静态实例
+     * @return void 
+     */
+    public static function clearInstance()
+    {
+        self::$instances = null;
+        self::$adapter = null;
+        self::$wrapper = null;
+    }
+
+    /**
      * 返回一个 Phinx\Db\Adapter\AdapterFactory 实例
      * @param bool $prefixWrapper 是否使用表前缀包装表名
      * @return AdapterInterface
