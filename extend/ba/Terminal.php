@@ -17,6 +17,7 @@ use think\facade\Config;
 use think\facade\Cookie;
 use app\admin\library\Auth;
 use app\admin\library\module\Manage;
+use app\ServerSideEvent;
 use think\exception\HttpResponseException;
 
 class Terminal
@@ -95,10 +96,7 @@ class Terminal
      */
     public static function instance(): Terminal
     {
-        if (is_null(self::$instance)) {
-            self::$instance = new static();
-        }
-        return self::$instance;
+        return app(static::class);
     }
 
     /**
@@ -170,15 +168,6 @@ class Terminal
      */
     public function exec(bool $authentication = true): void
     {
-        header('X-Accel-Buffering: no');
-        header('Content-Type: text/event-stream');
-        header('Cache-Control: no-cache');
-
-        while (ob_get_level()) {
-            ob_end_clean();
-        }
-        if (!ob_get_level()) ob_start();
-
         $this->commandKey = request()->param('command');
 
         $command = self::getCommand($this->commandKey);
@@ -266,9 +255,8 @@ class Terminal
         ];
         $data = json_encode($data, JSON_UNESCAPED_UNICODE);
         if ($data) {
-            echo 'data: ' . $data . "\n\n";
+            ServerSideEvent::emit($data);
             if ($callback) $this->outputCallback($data);
-            @ob_flush();// 刷新浏览器缓冲区
         }
     }
 
