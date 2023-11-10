@@ -52,7 +52,7 @@ class TableManager
      */
     public static function clearInstance()
     {
-        self::$instances = null;
+        self::$instances = [];
         self::$adapter = null;
         self::$wrapper = null;
     }
