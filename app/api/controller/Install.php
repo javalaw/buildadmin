@@ -621,7 +621,7 @@ class Install extends Api
             $dbConfig['connections']['mysql'] = array_merge($dbConfig['connections']['mysql'], $database);
             Config::set(['connections' => $dbConfig['connections']], 'database');
 
-            $connect = Db::connect('mysql');
+            $connect = Db::connect('mysql', true);
             $connect->execute("SELECT 1");
         } catch (PDOException $e) {
             $errorMsg = $e->getMessage();
