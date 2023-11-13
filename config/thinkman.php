@@ -9,6 +9,11 @@
 // | Author: axguowen <axguowen@qq.com>
 // +----------------------------------------------------------------------
 
+use app\admin\library\Auth;
+use app\admin\library\module\Manage;
+use app\common\resetters\TableManagerResetter;
+use ba\Terminal;
+use ba\Tree;
 use think\thinkman\App;
 use Workerman\Connection\TcpConnection;
 use Workerman\Protocols\Http\Request;
@@ -59,7 +64,7 @@ return [
             $connection = $app->get(TcpConnection::class);
             $reqeust = $app->get(Request::class);
             $rootPath = public_path();
-            $server   = $reqeust->get('server') || $reqeust->post('server') || $reqeust->header('server') ||substr($reqeust->path(), 1, 9) == 'index.php';
+            $server = $reqeust->get('server') || $reqeust->post('server') || $reqeust->header('server') || substr($reqeust->path(), 1, 9) == 'index.php';
             if (!$server) {
                 // 用户访问前端
                 $headers = [];
@@ -68,7 +73,7 @@ return [
                     $headers['Location'] = '/install';
                 }
                 // 安装检测-e
-
+        
                 /*
                  * 检测是否已编译前端-s
                  * 如果存在 index.html 则访问 index.html
@@ -77,12 +82,22 @@ return [
                     $headers['Location'] = '/index.html';
                 }
                 // 检测是否已编译前端-e
-                if($headers) {
+                if ($headers) {
                     $connection->send(new Response(302, $headers));
                     return false;
                 }
             }
             return true;
         }
-    ]
+    ],
+    'resets' => [
+        Auth::class,
+        \app\common\library\Auth::class,
+        Terminal::class,
+        Manage::class,
+        Tree::class,
+    ],
+    'resetters' => [
+        TableManagerResetter::class,
+    ],
 ];
