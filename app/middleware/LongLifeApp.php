@@ -46,6 +46,10 @@ class LongLifeApp
         }
 
 
-        return $next($request);
+        $resp = $next($request);
+        ServerSideEvent::reset();
+        return $resp;
     }
+
+
 }
