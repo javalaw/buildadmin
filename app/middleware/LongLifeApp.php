@@ -15,6 +15,7 @@ class LongLifeApp
     public function __construct(protected App $app, protected bool $sseRegistered = false)
     {
     }
+
     /**
      * 处理请求
      *
@@ -24,23 +25,26 @@ class LongLifeApp
      */
     public function handle($request, \Closure $next)
     {
-        if (class_exists(TcpConnection::class) && $this->app->has(TcpConnection::class) && !$this->sseRegistered) {
-            ServerSideEvent::registerHandler(function (string $data) {
-                $connection = $this->app->make(TcpConnection::class);
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                $connection->send(new ServerSentEvents(['event' => 'message', 'data' => $data]));
-            });
-            ServerSideEvent::registerHeaderHandler(function (array $headers) {
-                $connection = $this->app->make(TcpConnection::class);
-                while (ob_get_level()) {
-                    ob_end_clean();
-                }
-                $connection->send(new Response(headers: $headers, body: "\r\n"));
-            });
+        if (!$this->sseRegistered) {
+            if (class_exists(TcpConnection::class) && $this->app->has(TcpConnection::class)) {
+                ServerSideEvent::registerHandler(function (string $data) {
+                    $connection = $this->app->make(TcpConnection::class);
+                    while (ob_get_level()) {
+                        ob_end_clean();
+                    }
+                    $connection->send(new ServerSentEvents(['event' => 'message', 'data' => $data]));
+                });
+                ServerSideEvent::registerHeaderHandler(function (array $headers) {
+                    $connection = $this->app->make(TcpConnection::class);
+                    while (ob_get_level()) {
+                        ob_end_clean();
+                    }
+                    $connection->send(new Response(headers: $headers, body: "\r\n"));
+                });
+            }
             $this->sseRegistered = true;
         }
+
 
         return $next($request);
     }
