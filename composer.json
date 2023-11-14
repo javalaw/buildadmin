@@ -29,7 +29,8 @@
         "ext-bcmath": "*",
         "ext-iconv": "*",
         "ext-json": "*",
-        "ext-gd": "*"
+        "ext-gd": "*",
+        "axguowen/think-thinkman": "dev-master"
     },
     "require-dev": {
         "symfony/var-dumper": "^5.4",
@@ -55,5 +56,13 @@
             "@php think service:discover",
             "@php think vendor:publish"
         ]
-    }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/javalaw/think-thinkman.git"
+        }
+    ]
 }
