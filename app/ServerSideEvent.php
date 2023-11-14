@@ -35,6 +35,14 @@ class ServerSideEvent
     }
 
     /**
+     * 重置sse处理器状态
+     */
+    public static function reset()
+    {
+        self::$headerSent = false;
+    }
+
+    /**
      * 注册sse header处理器
      * @param callable $callback 
      * @return void 
@@ -63,7 +71,8 @@ class ServerSideEvent
         while (ob_get_level()) {
             ob_end_clean();
         }
-        if (!ob_get_level()) ob_start();
+        if (!ob_get_level())
+            ob_start();
     }
 
     /**
@@ -73,7 +82,7 @@ class ServerSideEvent
      */
     public static function emit(string $data)
     {
-        if(!static::$headerSent) {
+        if (!static::$headerSent) {
             $headerCallback = self::$headerCallback ?? Closure::fromCallable([self::class, 'defaultHeaderHandler']);
             call_user_func($headerCallback, self::headers());
             self::$headerSent = true;
